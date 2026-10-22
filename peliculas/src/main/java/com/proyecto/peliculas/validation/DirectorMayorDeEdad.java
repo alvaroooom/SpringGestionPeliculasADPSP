@@ -5,9 +5,6 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-/**
- * Validación a nivel de clase
- * Verifica que el director de una película tenga al menos una edad mínima.*/
 @Documented
 @Constraint(validatedBy = DirectorMayorDeEdadValidator.class)
 @Target(ElementType.TYPE)
