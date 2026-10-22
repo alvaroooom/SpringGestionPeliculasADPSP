@@ -2,7 +2,9 @@ package com.proyecto.peliculas.controller;
 
 import com.proyecto.peliculas.dto.PeliculaRequestDTO;
 import com.proyecto.peliculas.dto.PeliculaResponseDTO;
+import com.proyecto.peliculas.dto.RepartoRequestDTO;
 import com.proyecto.peliculas.model.Pelicula;
+import com.proyecto.peliculas.model.RolActor;
 import com.proyecto.peliculas.service.PeliculaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,23 @@ public class PeliculaController {
                 .toUri();
 
         return ResponseEntity.created(location).body(PeliculaResponseDTO.of(creada));
+    }
+
+    @PostMapping("/{peliculaId}/actores/{actorId}")
+    public ResponseEntity<PeliculaResponseDTO> asignarActor(
+            @PathVariable Long peliculaId,
+            @PathVariable Long actorId,
+            @RequestBody(required = false) RepartoRequestDTO dto) {
+
+        RolActor rol = dto != null ? dto.rol() : null;
+        Pelicula pelicula = peliculaService.asignarActor(peliculaId, actorId, rol);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/v1/peliculas/{id}")
+                .buildAndExpand(peliculaId)
+                .toUri();
+
+        return ResponseEntity.created(location).body(PeliculaResponseDTO.of(pelicula));
     }
 
     @PutMapping("/{id}")

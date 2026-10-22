@@ -44,6 +44,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(ActorYaEnRepartoException.class)
+    public ProblemDetail handleActorYaEnReparto(ActorYaEnRepartoException ex) {
+
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setTitle("Actor ya asignado");
+        problem.setDetail(ex.getMessage());
+        problem.setType(URI.create("https://example.com/errors/actor-ya-en-reparto"));
+
+        return problem;
+    }
+
     @Override
     protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,
