@@ -4,6 +4,7 @@ import com.proyecto.peliculas.dto.PeliculaRequestDTO;
 import com.proyecto.peliculas.dto.PeliculaResponseDTO;
 import com.proyecto.peliculas.model.Pelicula;
 import com.proyecto.peliculas.service.PeliculaService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class PeliculaController {
     }
 
     @PostMapping
-    public ResponseEntity<PeliculaResponseDTO> create(@RequestBody PeliculaRequestDTO dto) {
+    public ResponseEntity<PeliculaResponseDTO> create(@Valid @RequestBody PeliculaRequestDTO dto) {
         Pelicula creada = peliculaService.create(dto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -44,7 +45,7 @@ public class PeliculaController {
     }
 
     @PutMapping("/{id}")
-    public PeliculaResponseDTO update(@PathVariable Long id, @RequestBody PeliculaRequestDTO dto) {
+    public PeliculaResponseDTO update(@PathVariable Long id, @Valid @RequestBody PeliculaRequestDTO dto) {
         return PeliculaResponseDTO.of(peliculaService.update(id, dto));
     }
 

@@ -4,6 +4,7 @@ import com.proyecto.peliculas.dto.DirectorRequestDTO;
 import com.proyecto.peliculas.dto.DirectorResponseDTO;
 import com.proyecto.peliculas.model.Director;
 import com.proyecto.peliculas.service.DirectorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class DirectorController {
     }
 
     @PostMapping
-    public ResponseEntity<DirectorResponseDTO> create(@RequestBody DirectorRequestDTO dto) {
+    public ResponseEntity<DirectorResponseDTO> create(@Valid @RequestBody DirectorRequestDTO dto) {
         Director creado = directorService.create(dto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -44,7 +45,7 @@ public class DirectorController {
     }
 
     @PutMapping("/{id}")
-    public DirectorResponseDTO update(@PathVariable Long id, @RequestBody DirectorRequestDTO dto) {
+    public DirectorResponseDTO update(@PathVariable Long id, @Valid @RequestBody DirectorRequestDTO dto) {
         return DirectorResponseDTO.of(directorService.update(id, dto));
     }
 
