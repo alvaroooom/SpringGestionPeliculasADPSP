@@ -25,6 +25,6 @@ public class ActorService {
     }
 
     public Actor create(ActorRequestDTO dto) {
-        return actorRepository.save(dto.toEntity());
+        return actorRepository.save(dto.to());
     }
 }

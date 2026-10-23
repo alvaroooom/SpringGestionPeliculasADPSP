@@ -2,6 +2,10 @@ package com.proyecto.peliculas.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.proyecto.peliculas.error.notfound.EntidadNoEncontradaException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ElementKind;
+import jakarta.validation.Path;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -55,6 +59,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ProblemDetail handleConstraintViolation(ConstraintViolationException ex) {
+
+        ProblemDetail problem = ProblemDetail
+                .forStatusAndDetail(HttpStatus.BAD_REQUEST, "Error de validación");
+        problem.setTitle("Datos de entrada inválidos");
+        problem.setType(URI.create("https://example.com/errors/validation"));
+
+        List<ApiValidationSubError> subErrors = ex.getConstraintViolations().stream()
+                .map(ApiValidationSubError::from)
+                .toList();
+
+        problem.setProperty("invalid-params", subErrors);
+
+        return problem;
+    }
+
     @Override
     protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,
@@ -92,6 +113,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         fieldError.getRejectedValue());
             }
             return new ApiValidationSubError(error.getObjectName(), error.getDefaultMessage(), null, null);
+        }
+
+        static ApiValidationSubError from(ConstraintViolation<?> violation) {
+            return new ApiValidationSubError(
+                    violation.getRootBeanClass().getSimpleName(),
+                    violation.getMessage(),
+                    getFieldName(violation),
+                    violation.getInvalidValue());
+        }
+
+        // Nombre del campo (o parámetro) sobre el que se ha producido la violación
+        private static String getFieldName(ConstraintViolation<?> violation) {
+            String field = null;
+
+            for (Path.Node node : violation.getPropertyPath()) {
+                if (node.getKind() == ElementKind.PROPERTY || node.getKind() == ElementKind.PARAMETER) {
+                    field = node.getName();
+                }
+            }
+            return field;
         }
     }
 }

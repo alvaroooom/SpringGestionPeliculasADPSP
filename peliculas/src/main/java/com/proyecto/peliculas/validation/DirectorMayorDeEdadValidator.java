@@ -4,13 +4,13 @@ import com.proyecto.peliculas.dto.PeliculaRequestDTO;
 import com.proyecto.peliculas.repo.DirectorRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@RequiredArgsConstructor
 public class DirectorMayorDeEdadValidator
         implements ConstraintValidator<DirectorMayorDeEdad, PeliculaRequestDTO> {
 
-    private final DirectorRepository directorRepository;
+    @Autowired
+    private DirectorRepository directorRepository;
 
     private int edadMinima;
 

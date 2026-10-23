@@ -25,7 +25,7 @@ public class DirectorService {
     }
 
     public Director create(DirectorRequestDTO dto) {
-        return directorRepository.save(dto.toEntity());
+        return directorRepository.save(dto.to());
     }
 
     public Director update(Long id, DirectorRequestDTO dto) {
