@@ -1,0 +1,153 @@
+{
+  "info": {
+    "name": "Gestión de Películas",
+    "description": "Peticiones para probar la API. Los ids usados son los de los datos de ejemplo, así que conviene reiniciar la aplicación antes de ejecutar la colección completa.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ],
+  "item": [
+    {
+      "name": "Directores",
+      "item": [
+        {
+          "name": "Listar directores",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/directores" }
+        },
+        {
+          "name": "Obtener director",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/directores/1" }
+        },
+        {
+          "name": "Crear director",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Denis Villeneuve\",\n  \"anioNacimiento\": 1967\n}" },
+            "url": "{{baseUrl}}/api/v1/directores"
+          }
+        },
+        {
+          "name": "Actualizar director",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Christopher Edward Nolan\",\n  \"anioNacimiento\": 1970\n}" },
+            "url": "{{baseUrl}}/api/v1/directores/1"
+          }
+        },
+        {
+          "name": "Eliminar director (el recién creado)",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/v1/directores/5" }
+        }
+      ]
+    },
+    {
+      "name": "Actores",
+      "item": [
+        {
+          "name": "Listar actores",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/actores" }
+        },
+        {
+          "name": "Crear actor",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Timothée Chalamet\"\n}" },
+            "url": "{{baseUrl}}/api/v1/actores"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Películas",
+      "item": [
+        {
+          "name": "Listar películas",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/peliculas" }
+        },
+        {
+          "name": "Obtener película (con reparto)",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/peliculas/1" }
+        },
+        {
+          "name": "Crear película",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"titulo\": \"Interstellar\",\n  \"genero\": \"Ciencia ficción\",\n  \"fechaEstreno\": \"2014-11-07\",\n  \"directorId\": 1\n}" },
+            "url": "{{baseUrl}}/api/v1/peliculas"
+          }
+        },
+        {
+          "name": "Actualizar película",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"titulo\": \"Origen\",\n  \"genero\": \"Thriller\",\n  \"fechaEstreno\": \"2010-07-16\",\n  \"directorId\": 1\n}" },
+            "url": "{{baseUrl}}/api/v1/peliculas/1"
+          }
+        },
+        {
+          "name": "Asignar actor a película (con rol)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"rol\": \"VILLANO\"\n}" },
+            "url": "{{baseUrl}}/api/v1/peliculas/1/actores/4"
+          }
+        },
+        {
+          "name": "Eliminar película (la recién creada)",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/v1/peliculas/6" }
+        }
+      ]
+    },
+    {
+      "name": "Errores",
+      "item": [
+        {
+          "name": "Película inexistente (404)",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/peliculas/999" }
+        },
+        {
+          "name": "Película con título repetido (409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"titulo\": \"Origen\",\n  \"genero\": \"Drama\",\n  \"fechaEstreno\": \"2010-07-16\",\n  \"directorId\": 1\n}" },
+            "url": "{{baseUrl}}/api/v1/peliculas"
+          }
+        },
+        {
+          "name": "Actor ya en el reparto (409)",
+          "request": { "method": "POST", "header": [], "url": "{{baseUrl}}/api/v1/peliculas/1/actores/1" }
+        },
+        {
+          "name": "Eliminar director con películas (409)",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/v1/directores/2" }
+        },
+        {
+          "name": "Director con datos inválidos (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"\",\n  \"anioNacimiento\": 1700\n}" },
+            "url": "{{baseUrl}}/api/v1/directores"
+          }
+        },
+        {
+          "name": "Director menor de 18 años en el estreno (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"titulo\": \"Imposible\",\n  \"genero\": \"Drama\",\n  \"fechaEstreno\": \"1980-01-01\",\n  \"directorId\": 1\n}" },
+            "url": "{{baseUrl}}/api/v1/peliculas"
+          }
+        }
+      ]
+    }
+  ]
+}

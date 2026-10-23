@@ -104,7 +104,8 @@ public class DirectorController {
     @ApiResponses(
             {
                     @ApiResponse(responseCode = "204", description = "Director eliminado"),
-                    @ApiResponse(responseCode = "404", description = "No existe un director con ese id")
+                    @ApiResponse(responseCode = "404", description = "No existe un director con ese id"),
+                    @ApiResponse(responseCode = "409", description = "El director tiene películas y no se puede eliminar")
             }
     )
     @DeleteMapping("/{id}")

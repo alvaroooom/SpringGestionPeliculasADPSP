@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ElementKind;
 import jakarta.validation.Path;
 import org.jspecify.annotations.Nullable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -55,6 +56,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problem.setTitle("Actor ya asignado");
         problem.setDetail(ex.getMessage());
         problem.setType(URI.create("https://example.com/errors/actor-ya-en-reparto"));
+
+        return problem;
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail handleDataIntegrity(DataIntegrityViolationException ex) {
+
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setTitle("Operación no permitida");
+        problem.setDetail("La operación no se puede realizar porque hay datos relacionados, por ejemplo un director que todavía tiene películas");
+        problem.setType(URI.create("https://example.com/errors/data-integrity"));
 
         return problem;
     }
